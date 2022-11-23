@@ -55,7 +55,6 @@ const shortNumber = (number) => {
 };
 
 const RepositoryItem = ({ item }) => {
-  console.log(item);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
