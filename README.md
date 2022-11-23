@@ -8,3 +8,5 @@
 
 - reading 30min
 - 10.11 30min
+- reading 30min
+- 10.12 10min
