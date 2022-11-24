@@ -4,6 +4,9 @@ import Constants from 'expo-constants';
 
 import Text from './Text';
 import theme from '../theme';
+import { useApolloClient, useQuery } from '@apollo/client';
+import { ME } from '../graphql/queries';
+import useAuthStorage from '../hooks/useAuthStorage';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +26,15 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+  const { data } = useQuery(ME);
+  const authStorage = useAuthStorage();
+  const apolloClient = useApolloClient();
+
+  const logoutBtnHandler = async () => {
+    await authStorage.removeAccessToken();
+    await apolloClient.resetStore();
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scroll}>
@@ -31,11 +43,19 @@ const AppBar = () => {
             Repositories
           </Text>
         </Link>
-        <Link to="/login">
-          <Text style={styles.header} fontWeight="bold" fontSize="subheading">
-            Sign in
-          </Text>
-        </Link>
+        {data?.me ? (
+          <Link onPress={logoutBtnHandler}>
+            <Text style={styles.header} fontWeight="bold" fontSize="subheading">
+              Logout
+            </Text>
+          </Link>
+        ) : (
+          <Link to="/login">
+            <Text style={styles.header} fontWeight="bold" fontSize="subheading">
+              Sign in
+            </Text>
+          </Link>
+        )}
       </ScrollView>
     </View>
   );
