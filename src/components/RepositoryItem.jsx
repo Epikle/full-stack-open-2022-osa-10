@@ -2,6 +2,7 @@ import { Image, StyleSheet, View } from 'react-native';
 
 import Text from './Text';
 import theme from '../theme';
+import { shortNumber } from '../utils/shortNumber';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,18 +46,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const shortNumber = (number) => {
-  // eslint-disable-next-line no-undef
-  const short = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(number);
-  return short.toLowerCase();
-};
-
 const RepositoryItem = ({ item }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="repositoryItem">
       <View style={styles.header}>
         <Image style={styles.avatar} source={{ uri: item.ownerAvatarUrl }} />
         <View style={styles.nameContainer}>
