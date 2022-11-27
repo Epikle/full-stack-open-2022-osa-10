@@ -10,7 +10,9 @@ const useSignIn = () => {
   const [mutate, result] = useMutation(GET_TOKEN);
 
   const signIn = async ({ username, password }) => {
-    const { data } = await mutate({ variables: { username, password } });
+    const { data } = await mutate({
+      variables: { credentials: { username, password } },
+    });
 
     if (data?.authenticate) {
       await authStorage.setAccessToken(data.authenticate?.accessToken);

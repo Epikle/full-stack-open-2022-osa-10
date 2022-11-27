@@ -43,6 +43,13 @@ const AppBar = () => {
             Repositories
           </Text>
         </Link>
+        {data?.me && (
+          <Link to="/review">
+            <Text style={styles.header} fontWeight="bold" fontSize="subheading">
+              Create a review
+            </Text>
+          </Link>
+        )}
         {data?.me ? (
           <Link onPress={logoutBtnHandler}>
             <Text style={styles.header} fontWeight="bold" fontSize="subheading">
@@ -53,6 +60,13 @@ const AppBar = () => {
           <Link to="/login">
             <Text style={styles.header} fontWeight="bold" fontSize="subheading">
               Sign in
+            </Text>
+          </Link>
+        )}
+        {!data?.me && (
+          <Link to="/signup">
+            <Text style={styles.header} fontWeight="bold" fontSize="subheading">
+              Sign up
             </Text>
           </Link>
         )}
