@@ -1,12 +1,12 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Link } from 'react-router-native';
+import { Link, useNavigate } from 'react-router-native';
 import Constants from 'expo-constants';
 
 import Text from './Text';
 import theme from '../theme';
-import { useApolloClient, useQuery } from '@apollo/client';
-import { ME } from '../graphql/queries';
+import { useApolloClient } from '@apollo/client';
 import useAuthStorage from '../hooks/useAuthStorage';
+import useUser from '../hooks/useUser';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,13 +26,15 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const { data } = useQuery(ME);
+  const { isLoggedIn } = useUser();
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
+  const navigate = useNavigate();
 
   const logoutBtnHandler = async () => {
     await authStorage.removeAccessToken();
     await apolloClient.resetStore();
+    navigate('/', { replace: true });
   };
 
   return (
@@ -43,14 +45,29 @@ const AppBar = () => {
             Repositories
           </Text>
         </Link>
-        {data?.me && (
-          <Link to="/review">
-            <Text style={styles.header} fontWeight="bold" fontSize="subheading">
-              Create a review
-            </Text>
-          </Link>
+        {isLoggedIn && (
+          <>
+            <Link to="/review">
+              <Text
+                style={styles.header}
+                fontWeight="bold"
+                fontSize="subheading"
+              >
+                Create a review
+              </Text>
+            </Link>
+            <Link to="/myreviews">
+              <Text
+                style={styles.header}
+                fontWeight="bold"
+                fontSize="subheading"
+              >
+                My reviews
+              </Text>
+            </Link>
+          </>
         )}
-        {data?.me ? (
+        {isLoggedIn ? (
           <Link onPress={logoutBtnHandler}>
             <Text style={styles.header} fontWeight="bold" fontSize="subheading">
               Logout
@@ -63,7 +80,7 @@ const AppBar = () => {
             </Text>
           </Link>
         )}
-        {!data?.me && (
+        {!isLoggedIn && (
           <Link to="/signup">
             <Text style={styles.header} fontWeight="bold" fontSize="subheading">
               Sign up

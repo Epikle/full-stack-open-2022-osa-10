@@ -33,6 +33,7 @@ export const RepositoryListContainer = ({
   setSelectedSort,
   searchQuery,
   onChangeSearch,
+  onEndReach,
 }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
@@ -40,6 +41,8 @@ export const RepositoryListContainer = ({
 
   return (
     <FlatList
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => (
@@ -76,12 +79,16 @@ const RepositoryList = () => {
   const [selectedSort, setSelectedSort] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
   const [search] = useDebounce(searchQuery, 500);
-  const { repositories, loading, error } = useRepositories(
+  const { repositories, loading, error, fetchMore } = useRepositories(
     selectedSort,
     search
   );
 
   const onChangeSearch = (query) => setSearchQuery(query);
+  const onEndReach = () => {
+    console.log('End of repositories list');
+    fetchMore();
+  };
 
   if (error) return <Text style={styles.noRep}>{error.message}</Text>;
   if (loading) return <Text style={styles.noRep}>Loading...</Text>;
@@ -93,6 +100,7 @@ const RepositoryList = () => {
       setSelectedSort={setSelectedSort}
       searchQuery={searchQuery}
       onChangeSearch={onChangeSearch}
+      onEndReach={onEndReach}
     />
   );
 };

@@ -72,7 +72,7 @@ export const Form = ({ onSubmit }) => {
 };
 
 const Review = () => {
-  const [createReview] = useReview();
+  const { createReview } = useReview();
   const navigate = useNavigate();
 
   const onSubmit = async (values) => {
